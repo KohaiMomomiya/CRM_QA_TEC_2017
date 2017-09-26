@@ -9,5 +9,5 @@ Segundo Semestre, 2017
   
 Integrantes del Equipo de Desarrollo Original:
 * Mario Chinchilla
-* Jason Espinoza
-* Esteban Fonseca
+* Jason David Espinoza Siles
+* Esteban Fonseca Montoya
