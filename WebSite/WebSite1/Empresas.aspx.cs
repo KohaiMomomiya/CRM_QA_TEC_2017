@@ -13,11 +13,19 @@ public partial class Empresas : System.Web.UI.Page
 {
 
     private String corpName;
+
+   
     protected void Page_Load(object sender, EventArgs e)
     {
-        loadDataCorp();
-        loadContactsCorp();
+        
 
+        
+            loadDataCorp();
+            loadContactsCorp();
+            loadSalesCorp();
+            // code to only run at first page load here 
+        
+        
     }
 
 
@@ -143,7 +151,7 @@ public partial class Empresas : System.Web.UI.Page
         cmd.CommandText = "dbo.getCorporationContactsData";
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@name", corpName);
+        cmd.Parameters.AddWithValue("@name", Label12.Text);
         reader = cmd.ExecuteReader();
         
         while (reader.Read())
@@ -201,24 +209,230 @@ public partial class Empresas : System.Web.UI.Page
         System.Data.SqlTypes.SqlNullValueException exp;
         SqlCommand cmd = new SqlCommand();
         SqlDataReader reader;
-        cmd.CommandText = "dbo.getCorporationContactsData";
+        cmd.CommandText = "dbo.getSalesGeneralData";
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@name", Label12.Text);
+        cmd.Parameters.AddWithValue("@corp", Label12.Text);
         reader = cmd.ExecuteReader();
+
+        DataTable dt = new DataTable();
+        DataRow dr = null;
+
+        
+
+        dt.Columns.Add(new DataColumn("ID", typeof(string)));
+        dt.Columns.Add(new DataColumn("Tipo", typeof(string)));
+        dt.Columns.Add(new DataColumn("Nombre Persona", typeof(string)));
+        dt.Columns.Add(new DataColumn("Correo", typeof(string)));
+        dr = dt.NewRow();
+
+
         while (reader.Read())
         {
+            
             try
             {
+                //Guardar elementos en la tabla de ventas.
+                //ids.Add("333");
+                dr["ID"] = reader.GetValue(0).ToString();
                 
+                dr["Tipo"] = reader.GetValue(1).ToString();
+                
+                dr["Nombre Persona"] = reader.GetValue(2).ToString();
+                dr["Correo"] = reader.GetValue(3).ToString();
+                
+
+                dt.Rows.Add(dr);
+                dr = dt.NewRow();
             }
             catch (System.Data.SqlTypes.SqlNullValueException ex)
             {
                 exp = ex;
             }
+        }
 
+       
+        
+
+
+
+        con.Close();
+        
+        //Agregar propuestas a la tabla.
+        con.Open();
+        cmd = new SqlCommand();
+        cmd.CommandText = "dbo.getSalesPetitionsGeneralData";
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@corp", Label12.Text);
+        reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+           
+            try
+            {
+                dr["ID"] = reader.GetValue(0).ToString();
+                
+                dr["Tipo"] = reader.GetValue(1).ToString();
+               
+                dr["Nombre Persona"] = reader.GetValue(2).ToString();
+                dr["Correo"] = reader.GetValue(3).ToString();
+                
+
+                dt.Rows.Add(dr);
+                dr = dt.NewRow();
+
+            }
+            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            {
+                exp = ex;
+            }
         }
         con.Close();
+
+
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+
+
+        //Agregar propuestas a la tabla.
+        con.Open();
+        cmd = new SqlCommand();
+        cmd.CommandText = "dbo.getSalesPetitionsGeneralData";
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@corp", Label12.Text);
+        reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+
+            try
+            {
+                dr["ID"] = reader.GetValue(0).ToString();
+                dr["Tipo"] = reader.GetValue(1).ToString();
+                dr["Nombre Persona"] = reader.GetValue(2).ToString();
+                dr["Correo"] = reader.GetValue(3).ToString();
+       
+                dt.Rows.Add(dr);
+                dr = dt.NewRow();
+
+            }
+            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            {
+                exp = ex;
+            }
+        }
+        con.Close();
+
+
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+
+        /// ESTO VA A LLENAR LA TABLA DE CADA INFO DE VENTAS PARA CUMPLIR LOS REQUERIMIENTOS DE LA PARTE 2
+        //Agregar propuestas a la tabla.
+        con.Open();
+        cmd = new SqlCommand();
+        cmd.CommandText = "dbo.getSalesInfo";
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Connection = con;
+        
+        reader = cmd.ExecuteReader();
+        DataTable dt2 = new DataTable();
+        DataRow dr2 = null;
+
+
+        dt2.Columns.Add(new DataColumn("ID Venta", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Qué fue Vendido", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Cuándo se vendió", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Precio", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Descuento", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Comisión", typeof(string)));
+        dt2.Columns.Add(new DataColumn("Quién hizo la venta", typeof(string)));
+        
+        
+        dr2 = dt2.NewRow();
+        while (reader.Read())
+        {
+
+            try
+            {
+                dr2["ID Venta"] = reader.GetValue(0).ToString();
+                dr2["Qué fue Vendido"] = reader.GetValue(1).ToString();
+                dr2["Cuándo se vendió"] = reader.GetValue(2).ToString();
+                dr2["Precio"] = reader.GetValue(3).ToString();
+                dr2["Descuento"] = reader.GetValue(4).ToString();
+                dr2["Comisión"] = reader.GetValue(5).ToString();
+                dr2["Quién hizo la venta"] = reader.GetValue(6).ToString();
+
+                dt2.Rows.Add(dr2);
+                dr2 = dt2.NewRow();
+
+            }
+            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            {
+                exp = ex;
+            }
+        }
+        con.Close();
+
+
+        GridView2.DataSource = dt2;
+        GridView2.DataBind();
+
+
+        /// ESTO VA A LLENAR LA TABLA DE RESPUESTAS DE LAS VENTAS
+        //Agregar propuestas a la tabla.
+        con.Open();
+        cmd = new SqlCommand();
+        cmd.CommandText = "dbo.getReviewsInfo";
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Connection = con;
+
+        reader = cmd.ExecuteReader();
+        DataTable dt3 = new DataTable();
+        DataRow dr3 = null;
+
+
+        dt3.Columns.Add(new DataColumn("ID Propuesta", typeof(string)));
+        dt3.Columns.Add(new DataColumn("Fecha", typeof(string)));
+        dt3.Columns.Add(new DataColumn("Quién lo revisó", typeof(string)));
+        dt3.Columns.Add(new DataColumn("Estado", typeof(string)));
+        dt3.Columns.Add(new DataColumn("Observaciones", typeof(string)));
+        
+
+
+        dr3 = dt3.NewRow();
+        while (reader.Read())
+        {
+
+            try
+            {
+                dr3["ID Propuesta"] = reader.GetValue(0).ToString();
+                dr3["Fecha"] = reader.GetValue(1).ToString();
+                dr3["Quién lo revisó"] = reader.GetValue(2).ToString();
+                if (reader.GetValue(3).ToString().Equals("1"))
+                    dr3["Estado"] = "Aprobado";
+                else
+                    dr3["Estado"] = "Denegado";
+                dr3["Observaciones"] = reader.GetValue(4).ToString();
+                
+
+                dt3.Rows.Add(dr3);
+                dr3 = dt3.NewRow();
+
+            }
+            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            {
+                exp = ex;
+            }
+        }
+        con.Close();
+
+
+        GridView3.DataSource = dt3;
+        GridView3.DataBind();
+
+
 
     }
 
@@ -239,6 +453,19 @@ sales l
 
     protected void bttnCerrarSesion(object sender, EventArgs e)
     {
+        Server.Transfer("Login.aspx", true);
+    }
 
+
+
+
+    protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        int indice = Convert.ToInt32( GridView1.SelectedIndex.ToString());
+        Label23.Text = indice.ToString();
+
+
+        
+        
     }
 }

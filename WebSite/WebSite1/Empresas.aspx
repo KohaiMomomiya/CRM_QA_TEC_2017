@@ -11,7 +11,7 @@
 
         }
         #form1 {
-            height: 1627px;
+            height: 1957px;
             width: 1058px;
             margin-left: 73px;
             margin-top: 92px;
@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body style="height: 1806px">
+<body style="height: 2244px">
     <form id="form1" runat="server">
         <asp:Panel ID="Panel2" runat="server" Font-Names="Market Deco" Font-Size="XX-Large" HorizontalAlign="Left" Height="144px" BorderColor="#CCCCCC">
             &nbsp; empresas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -142,21 +142,34 @@
         <br />
 
         <asp:Panel ID="Panel4" runat="server" Font-Names="Coolvetica Rg" Height="205px" Width="715px" style="margin-left: 89px" ScrollBars="Vertical">
-            <asp:Table ID="Table2" runat="server" GridLines="Both" Height="200px" HorizontalAlign="Left" style="margin-left: 14px" Width="660px">
-                <asp:TableRow runat="server" BackColor="Red" ForeColor="White">
-                    <asp:TableCell runat="server">ID</asp:TableCell>
-                    <asp:TableCell runat="server">Tipo</asp:TableCell>
-                    <asp:TableCell runat="server">Nombre de persona</asp:TableCell>
-                    <asp:TableCell runat="server">Correo</asp:TableCell>
-                </asp:TableRow>
-            </asp:Table>
-            &nbsp;</asp:Panel>
+            &nbsp;<asp:GridView ID="GridView1" runat="server" Height="175px" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" Width="706px">
+                <Columns>
+                    <asp:CommandField ButtonType="Button" ShowSelectButton="True" />
+                </Columns>
+            </asp:GridView>
+        </asp:Panel>
+
+            <asp:Label ID="Label24" runat="server" Font-Names="Coolvetica Rg" Font-Size="X-Large" Text="Seguimiento a Ventas"></asp:Label>
 
         <br />
         <br />
+        <asp:Panel ID="Panel5" runat="server" Height="281px" ScrollBars="Both" style="margin-left: 81px" Width="931px">
+            <asp:GridView ID="GridView2" runat="server" Height="255px" Width="921px">
+            </asp:GridView>
+        </asp:Panel>
         <br />
         <br />
 
+        <br />
+        <br />
+        <asp:Panel ID="Panel6" runat="server" Height="322px" ScrollBars="Both" style="margin-left: 77px" Width="937px">
+            <asp:GridView ID="GridView3" runat="server" Height="308px" Width="923px">
+            </asp:GridView>
+        </asp:Panel>
+        <br />
+        <br />
+        <br />
+        <br />
         <br />
         <br />
         <br />

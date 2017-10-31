@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LoginModelApp;
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -26,8 +27,38 @@ public partial class _Default : System.Web.UI.Page
         Server.Transfer("Register.aspx", true);
     }
 
-
     public void verificarInicioSesion(String userName, String password) {
+        int stateLogin;
+        String corpName;
+        LoginModel vlogin = new LoginModel(userName, password);
+        stateLogin = vlogin.verificarInicioSesion();
+        switch (stateLogin) {
+            case -2:
+                Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
+                break;
+            case -1:
+                Session["VerifyUser"] = 1 + "";
+                lblBase.Text = "Contraseña o Usuario incorrecto.";
+                break;
+            case 0:
+                Server.Transfer("PortalClientes.aspx", true);
+                break;
+            case 1:
+                Server.Transfer("IndexAdmin.aspx", true);
+                break;
+            case 3:
+                //consultar empresa del usuario, y redirigir el usuario a dicha empresa.
+                corpName = vlogin.getCorpNameUser();
+                Session["Corp"] = corpName;
+                Response.Redirect("Empresas.aspx");
+                Server.Transfer("Empresas.aspx", true);
+                break;
+
+        }
+    }
+
+
+    /*public void verificarInicioSesion(String userName, String password) {
         SqlConnection con = null;
         int isUser = 0;
 
@@ -63,6 +94,9 @@ public partial class _Default : System.Web.UI.Page
             {
                 Server.Transfer("IndexAdmin.aspx", true);
             }
+            else if (isUser == 3) {
+                //consultar empresa del usuario, y redirigir el usuario a dicha empresa.
+            }
             else
             {
                 Server.Transfer("PortalClientes.aspx", true);
@@ -70,7 +104,7 @@ public partial class _Default : System.Web.UI.Page
 
         }
 
-    }
+    }*/
     protected void bttnIniciarSesion(object sender, EventArgs e)
     {
         //Verifica si el usuario y contraseña coinciden.
