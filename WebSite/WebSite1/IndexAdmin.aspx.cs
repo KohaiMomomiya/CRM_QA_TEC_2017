@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using toConnect;
+using toAdminModel;
+
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -25,50 +28,26 @@ public partial class _Default : System.Web.UI.Page
 
             }
 
-
         }
         
-
     }
 
     private void loadCorps()
     {
-        DropDownList1.Items.Clear();
-        SqlConnection con = null;
+
+        //Voy a cargar las corporaciones, son string entonces voy a usar un array de strings
+        ArrayList corporations = new ArrayList();
         int isUser = 0;
+        corporations = AdminModel.corporations();
 
-        try
-        {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
+        DropDownList1.Items.Clear();
 
-        }
-        catch (Exception ex)
+        for(int i = 0; i < corporations.Count; i++)
         {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
+            DropDownList1.Items.Add(corporations[i].ToString());
         }
 
-        con.Open();
-        System.Data.SqlTypes.SqlNullValueException exp;
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader;
-        cmd.CommandText = "dbo.getCorporationsName";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            try
-            {
-                string corpName = reader.GetValue(0).ToString();
-                DropDownList1.Items.Add(corpName);
-            }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
-            {
-                exp = ex;
-            }
-
-        }
-        con.Close();
+        
     }
 
     protected void bttnCerrarSesion(object sender, EventArgs e)
@@ -78,9 +57,7 @@ public partial class _Default : System.Web.UI.Page
 
     protected void bttnBuscar(object sender, EventArgs e)
     {
-        /*HttpCookie cName = new HttpCookie("Corp");
-        cName.Value = DropDownList1.SelectedItem.Value;
-        Response.Cookies.Add(cName);*/
+        
         Session["Corp"] = DropDownList1.SelectedItem.Value;
         Response.Redirect("Empresas.aspx");
         Server.Transfer("Empresas.aspx", true);

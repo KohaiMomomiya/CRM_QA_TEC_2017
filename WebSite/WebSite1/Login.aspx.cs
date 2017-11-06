@@ -29,7 +29,6 @@ public partial class _Default : System.Web.UI.Page
 
     public void verificarInicioSesion(String userName, String password) {
         int stateLogin;
-        String corpName;
         LoginModel vlogin = new LoginModel(userName, password);
         stateLogin = vlogin.verificarInicioSesion();
         switch (stateLogin) {
@@ -48,63 +47,12 @@ public partial class _Default : System.Web.UI.Page
                 break;
             case 3:
                 //consultar empresa del usuario, y redirigir el usuario a dicha empresa.
-                corpName = vlogin.getCorpNameUser();
-                Session["Corp"] = corpName;
-                Response.Redirect("Empresas.aspx");
-                Server.Transfer("Empresas.aspx", true);
                 break;
 
         }
     }
 
-
-    /*public void verificarInicioSesion(String userName, String password) {
-        SqlConnection con = null;
-        int isUser = 0;
-
-        try
-        {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
-            lblBase.Text = "Conexión con TEC_QA_CRM";
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-        }
-
-        con.Open();
-        SqlCommand cmd = new SqlCommand("SELECT dbo.validarLogin(@userName,@password)", con);
-        cmd.Parameters.AddWithValue("@userName", userName);
-        cmd.Parameters.AddWithValue("@password", password);
-        isUser = (Int32)cmd.ExecuteScalar();
-        con.Close();
-
-        //devuelve el salt desde sql con el cual sabemos si el usuario es administrador o no.
-        if (isUser == -1)
-        {
-            //no hay usuario
-            Session["VerifyUser"] = 1 + "";
-            lblBase.Text = "Contraseña o Usuario incorrecto.";
-        }
-        else
-        {
-            Session["VerifyUser"] = 0 + "";
-            //El tipo de salt representa si el usuario es administrador o no.
-            if (isUser == 1)
-            {
-                Server.Transfer("IndexAdmin.aspx", true);
-            }
-            else if (isUser == 3) {
-                //consultar empresa del usuario, y redirigir el usuario a dicha empresa.
-            }
-            else
-            {
-                Server.Transfer("PortalClientes.aspx", true);
-            }
-
-        }
-
-    }*/
+    
     protected void bttnIniciarSesion(object sender, EventArgs e)
     {
         //Verifica si el usuario y contraseña coinciden.

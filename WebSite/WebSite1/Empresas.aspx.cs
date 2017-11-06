@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Reflection;
+using toConnect;
+using toEmpresaModel;
 
 public partial class Empresas : System.Web.UI.Page
 {
@@ -20,12 +23,15 @@ public partial class Empresas : System.Web.UI.Page
         
 
         
-            loadDataCorp();
-            loadContactsCorp();
-            loadSalesCorp();
+        loadDataCorp();
+        loadContactsCorp();
+        loadSalesandPropCorp();
+        loadSeguimientoVentas();
+        loadPropuestasInfo();
+
             // code to only run at first page load here 
-        
-        
+
+
     }
 
 
@@ -40,181 +46,79 @@ public partial class Empresas : System.Web.UI.Page
         else {
             Label12.Text = "Sin nombre";
         }
+        String corporationName = Label12.Text;
 
-        SqlConnection con = null;
-        int isUser = 0;
+        ArrayList info = new ArrayList();
 
-        try
+        info = EmpresaModel.cargaDataCorp(corporationName);
+
+        for(int i = 0; i < info.Count - 1; i++)
         {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
-
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
+            DropDownList1.Items.Add( info[i].ToString() );
         }
 
-        con.Open();
-        System.Data.SqlTypes.SqlNullValueException exp;
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader;
-        cmd.CommandText = "dbo.getCorporationData";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@name", Label12.Text);
-        reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            try
-            {
-                Label20.Text = reader.GetValue(1).ToString();
-                string phoneNumber = reader.GetValue(2).ToString();
-                DropDownList1.Items.Add(phoneNumber);
-            }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
-            {
-                exp = ex;
-            }
-
-        }
-        con.Close();
+        if(info.Count>0)
+            Label20.Text = info[info.Count-1].ToString();
 
     }
 
-    private String getContactPhoneNumbers(int contactID) {
-        String numbers = "";
-        SqlConnection con = null;
-        try
-        {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
-
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-        }
-
-        con.Open();
-        System.Data.SqlTypes.SqlNullValueException exp;
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader;
-        cmd.CommandText = "dbo.getContactPhoneNumbers";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@contactID", contactID);
-        reader = cmd.ExecuteReader();
-        TableRow row = new TableRow();
-        while (reader.Read())
-        {
-            try
-            {
-                numbers += reader.GetValue(0).ToString() + " ";
-
-            }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
-            {
-                exp = ex;
-            }
-
-        }
-        con.Close();
-
-        return numbers;
-    }
+    
 
     private void loadContactsCorp() {
-        //Carga los datos de los contactos de la empresa.
-        //TableRow row = new TableRow();
-        //for (int i = 0; i < 5; i++) {
-            //TableCell col = new TableCell();
-            //col.Controls.Add(new TextBox());
-            //col.Text = "Khé";
-            //row.Cells.Add(col);
-            //tblContacts.Rows.Add(row);
-        //}
-        SqlConnection con = null;
-        int contactID = -1;
-        try
-        {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
 
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-        }
+        string nombreCorp = Label12.Text;
 
-        con.Open();
-        System.Data.SqlTypes.SqlNullValueException exp;
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader;
-        cmd.CommandText = "dbo.getCorporationContactsData";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@name", Label12.Text);
-        reader = cmd.ExecuteReader();
-        
-        while (reader.Read())
+        ArrayList infoContactos = new ArrayList();
+        infoContactos = EmpresaModel.getCorpContacts(nombreCorp);
+             
+
+        DataTable dt = new DataTable();
+        DataRow dr = null;
+
+
+        dt.Columns.Add(new DataColumn("Nombre", typeof(string)));
+        dt.Columns.Add(new DataColumn("Correo", typeof(string)));
+        dt.Columns.Add(new DataColumn("Número de Teléfono", typeof(string)));
+        dt.Columns.Add(new DataColumn("Dirección", typeof(string)));
+        dt.Columns.Add(new DataColumn("Rol", typeof(string)));
+        dr = dt.NewRow();
+
+
+        for (int i = 0; i < infoContactos.Count; i++)
         {
-            TableRow row = new TableRow();
             try
             {
-                //Guardar elementos en la tabla.
-                for (int i = 0; i < 5; i++)
-                {
-                    TableCell col = new TableCell();
-                    if (i == 0)
-                    {
-                        contactID = int.Parse(reader.GetValue(i).ToString());
-                    }
-                    else {
-                        if (i == 3)
-                        {
-                            TableCell colPhoneNumbers = new TableCell();
-                            colPhoneNumbers.Text = getContactPhoneNumbers(contactID);
-                            row.Cells.Add(colPhoneNumbers);
-                        }
-                        col.Text = reader.GetValue(i).ToString();
-                        row.Cells.Add(col);
-                        tblContacts.Rows.Add(row);
-
-                    }
-                    
-                }
-
+                
+                
+                dr["Nombre"] = infoContactos[i].ToString();
+                dr["Correo"] = infoContactos[i+1].ToString();
+                dr["Número de Teléfono"] = infoContactos[i+2].ToString();
+                dr["Dirección"] = infoContactos[i+3].ToString();
+                dr["Rol"] = infoContactos[i+4].ToString();
+                dt.Rows.Add(dr);
+                dr = dt.NewRow();
+                i = i + 4;
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            catch ( Exception ex)
             {
-                exp = ex;
+                
             }
-
         }
-        con.Close();
+
+        tblContacts.DataSource = dt;
+        tblContacts.DataBind();
+
     }
 
-    private void loadSalesCorp() {
+
+
+    private void loadSalesandPropCorp()
+    {
         //Carga los datos de las ventas.
-        SqlConnection con = null;
-        try
-        {
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
+        string nombreCorp = Label12.Text;
 
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-        }
-
-        con.Open();
-        System.Data.SqlTypes.SqlNullValueException exp;
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader;
-        cmd.CommandText = "dbo.getSalesGeneralData";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@corp", Label12.Text);
-        reader = cmd.ExecuteReader();
-
+        ArrayList infoVentas = new ArrayList();
+        infoVentas = EmpresaModel.getSalesCorp(nombreCorp);
         DataTable dt = new DataTable();
         DataRow dr = null;
 
@@ -227,235 +131,180 @@ public partial class Empresas : System.Web.UI.Page
         dr = dt.NewRow();
 
 
-        while (reader.Read())
+        for (int i = 0; i < infoVentas.Count; i++)
         {
-            
+
             try
             {
                 //Guardar elementos en la tabla de ventas.
-                //ids.Add("333");
-                dr["ID"] = reader.GetValue(0).ToString();
-                
-                dr["Tipo"] = reader.GetValue(1).ToString();
-                
-                dr["Nombre Persona"] = reader.GetValue(2).ToString();
-                dr["Correo"] = reader.GetValue(3).ToString();
-                
+
+                dr["ID"] = infoVentas[i].ToString();
+                dr["Tipo"] = infoVentas[i + 1].ToString();
+                dr["Nombre Persona"] = infoVentas[i + 2].ToString();
+                dr["Correo"] = infoVentas[i + 3].ToString();
+                i = i + 3;
 
                 dt.Rows.Add(dr);
                 dr = dt.NewRow();
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            catch (Exception ex)
             {
-                exp = ex;
+
             }
         }
 
-       
-        
 
+        //Carga los datos de las propuestas.
 
+        ArrayList infoPropuestas = new ArrayList();
+        infoPropuestas = EmpresaModel.getPropCorp(nombreCorp);
+        dr = dt.NewRow();
 
-        con.Close();
-        
-        //Agregar propuestas a la tabla.
-        con.Open();
-        cmd = new SqlCommand();
-        cmd.CommandText = "dbo.getSalesPetitionsGeneralData";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@corp", Label12.Text);
-        reader = cmd.ExecuteReader();
-        while (reader.Read())
+        for (int i = 0; i < infoPropuestas.Count; i++)
         {
-           
+
             try
             {
-                dr["ID"] = reader.GetValue(0).ToString();
-                
-                dr["Tipo"] = reader.GetValue(1).ToString();
-               
-                dr["Nombre Persona"] = reader.GetValue(2).ToString();
-                dr["Correo"] = reader.GetValue(3).ToString();
-                
+                //Guardar elementos en la tabla de ventas.
+
+                dr["ID"] = infoPropuestas[i].ToString();
+                dr["Tipo"] = infoPropuestas[i + 1].ToString();
+                dr["Nombre Persona"] = infoPropuestas[i + 2].ToString();
+                dr["Correo"] = infoPropuestas[i + 3].ToString();
+                i = i + 3;
 
                 dt.Rows.Add(dr);
                 dr = dt.NewRow();
+            }
+            catch (Exception ex)
+            {
 
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
-            {
-                exp = ex;
-            }
         }
-        con.Close();
 
 
         GridView1.DataSource = dt;
         GridView1.DataBind();
 
 
-        //Agregar propuestas a la tabla.
-        con.Open();
-        cmd = new SqlCommand();
-        cmd.CommandText = "dbo.getSalesPetitionsGeneralData";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@corp", Label12.Text);
-        reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
 
+
+
+    }
+
+
+    private void loadSeguimientoVentas()
+    {
+        string nombreCorp = Label12.Text;
+
+        ArrayList infoVentasSeguimiento = new ArrayList();
+        infoVentasSeguimiento = EmpresaModel.getSeguimientoVentas();
+
+
+
+
+        DataTable dt = new DataTable();
+        DataRow dr = null;
+
+
+        dt.Columns.Add(new DataColumn("ID Venta", typeof(string)));
+        dt.Columns.Add(new DataColumn("Qué fue Vendido", typeof(string)));
+        dt.Columns.Add(new DataColumn("Cuándo se vendió", typeof(string)));
+        dt.Columns.Add(new DataColumn("Precio", typeof(string)));
+        dt.Columns.Add(new DataColumn("Descuento", typeof(string)));
+        dt.Columns.Add(new DataColumn("Comisión", typeof(string)));
+        dt.Columns.Add(new DataColumn("Quién hizo la venta", typeof(string)));
+
+        dr = dt.NewRow();
+        for (int i = 0; i < infoVentasSeguimiento.Count; i++)
+        {
             try
             {
-                dr["ID"] = reader.GetValue(0).ToString();
-                dr["Tipo"] = reader.GetValue(1).ToString();
-                dr["Nombre Persona"] = reader.GetValue(2).ToString();
-                dr["Correo"] = reader.GetValue(3).ToString();
-       
+                dr["ID Venta"] = infoVentasSeguimiento[i].ToString();
+                dr["Qué fue Vendido"] = infoVentasSeguimiento[i + 1].ToString();
+                dr["Cuándo se vendió"] = infoVentasSeguimiento[i + 2].ToString();
+                dr["Precio"] = infoVentasSeguimiento[i + 3].ToString();
+                dr["Descuento"] = infoVentasSeguimiento[i + 4].ToString();
+                dr["Comisión"] = infoVentasSeguimiento[i + 5].ToString();
+                dr["Quién hizo la venta"] = infoVentasSeguimiento[i + 6].ToString();
+
+                i = i + 6;
+
                 dt.Rows.Add(dr);
                 dr = dt.NewRow();
 
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            catch (Exception ex)
             {
-                exp = ex;
+
             }
+
         }
-        con.Close();
 
-
-        GridView1.DataSource = dt;
-        GridView1.DataBind();
-
-        /// ESTO VA A LLENAR LA TABLA DE CADA INFO DE VENTAS PARA CUMPLIR LOS REQUERIMIENTOS DE LA PARTE 2
-        //Agregar propuestas a la tabla.
-        con.Open();
-        cmd = new SqlCommand();
-        cmd.CommandText = "dbo.getSalesInfo";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-        
-        reader = cmd.ExecuteReader();
-        DataTable dt2 = new DataTable();
-        DataRow dr2 = null;
-
-
-        dt2.Columns.Add(new DataColumn("ID Venta", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Qué fue Vendido", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Cuándo se vendió", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Precio", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Descuento", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Comisión", typeof(string)));
-        dt2.Columns.Add(new DataColumn("Quién hizo la venta", typeof(string)));
-        
-        
-        dr2 = dt2.NewRow();
-        while (reader.Read())
-        {
-
-            try
-            {
-                dr2["ID Venta"] = reader.GetValue(0).ToString();
-                dr2["Qué fue Vendido"] = reader.GetValue(1).ToString();
-                dr2["Cuándo se vendió"] = reader.GetValue(2).ToString();
-                dr2["Precio"] = reader.GetValue(3).ToString();
-                dr2["Descuento"] = reader.GetValue(4).ToString();
-                dr2["Comisión"] = reader.GetValue(5).ToString();
-                dr2["Quién hizo la venta"] = reader.GetValue(6).ToString();
-
-                dt2.Rows.Add(dr2);
-                dr2 = dt2.NewRow();
-
-            }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
-            {
-                exp = ex;
-            }
-        }
-        con.Close();
-
-
-        GridView2.DataSource = dt2;
+        GridView2.DataSource = dt;
         GridView2.DataBind();
+    }
+
+    private void loadPropuestasInfo()
+    {
+        string nombreCorp = Label12.Text;
+
+        ArrayList infoPropuestasSeguimiento = new ArrayList();
+        infoPropuestasSeguimiento = EmpresaModel.getPropuestasInfo();
 
 
-        /// ESTO VA A LLENAR LA TABLA DE RESPUESTAS DE LAS VENTAS
-        //Agregar propuestas a la tabla.
-        con.Open();
-        cmd = new SqlCommand();
-        cmd.CommandText = "dbo.getReviewsInfo";
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Connection = con;
-
-        reader = cmd.ExecuteReader();
-        DataTable dt3 = new DataTable();
-        DataRow dr3 = null;
+        DataTable dt = new DataTable();
+        DataRow dr = null;
 
 
-        dt3.Columns.Add(new DataColumn("ID Propuesta", typeof(string)));
-        dt3.Columns.Add(new DataColumn("Fecha", typeof(string)));
-        dt3.Columns.Add(new DataColumn("Quién lo revisó", typeof(string)));
-        dt3.Columns.Add(new DataColumn("Estado", typeof(string)));
-        dt3.Columns.Add(new DataColumn("Observaciones", typeof(string)));
-        
+        dt.Columns.Add(new DataColumn("ID Propuesta", typeof(string)));
+        dt.Columns.Add(new DataColumn("Fecha", typeof(string)));
+        dt.Columns.Add(new DataColumn("Quién lo revisó", typeof(string)));
+        dt.Columns.Add(new DataColumn("Estado", typeof(string)));
+        dt.Columns.Add(new DataColumn("Observaciones", typeof(string)));
 
 
-        dr3 = dt3.NewRow();
-        while (reader.Read())
+
+        dr = dt.NewRow();
+        for (int i = 0; i < infoPropuestasSeguimiento.Count; i++)
         {
 
             try
             {
-                dr3["ID Propuesta"] = reader.GetValue(0).ToString();
-                dr3["Fecha"] = reader.GetValue(1).ToString();
-                dr3["Quién lo revisó"] = reader.GetValue(2).ToString();
-                if (reader.GetValue(3).ToString().Equals("1"))
-                    dr3["Estado"] = "Aprobado";
+                dr["ID Propuesta"] = infoPropuestasSeguimiento[i].ToString();
+                dr["Fecha"] = infoPropuestasSeguimiento[i+1].ToString();
+                dr["Quién lo revisó"] = infoPropuestasSeguimiento[i+2].ToString();
+                if (infoPropuestasSeguimiento[i+3].ToString().Equals("1"))
+                    dr["Estado"] = "Aprobado";
                 else
-                    dr3["Estado"] = "Denegado";
-                dr3["Observaciones"] = reader.GetValue(4).ToString();
-                
+                    dr["Estado"] = "Denegado";
+                dr["Observaciones"] = infoPropuestasSeguimiento[i+4].ToString();
 
-                dt3.Rows.Add(dr3);
-                dr3 = dt3.NewRow();
+                i = i + 4;
+
+                dt.Rows.Add(dr);
+                dr = dt.NewRow();
 
             }
-            catch (System.Data.SqlTypes.SqlNullValueException ex)
+            catch (Exception ex)
             {
-                exp = ex;
+                
             }
         }
-        con.Close();
+        
 
 
-        GridView3.DataSource = dt3;
+        GridView3.DataSource = dt;
         GridView3.DataBind();
 
 
-
     }
+       
 
-    /*
-     select u.Email
-from 
-users u 
-	inner join
-SalesPetitions s
-	on s.PetitionID = u.UserID
-	inner join
-reviewpetitions r
-	on s.PetitionID = r.PetitionID
-	inner join
-sales l
-	on r.SaleID = l.SaleID
-     */
-
-    protected void bttnCerrarSesion(object sender, EventArgs e)
+        protected void bttnCerrarSesion(object sender, EventArgs e)
     {
         Server.Transfer("Login.aspx", true);
     }
-
 
 
 
