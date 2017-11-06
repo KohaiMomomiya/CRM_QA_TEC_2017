@@ -18,10 +18,10 @@ namespace toConnect
         {
             try
             {
-                con = new SqlConnection("Data Source=JASONDAVIDES;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
+                con = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
                
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }

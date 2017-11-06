@@ -99,7 +99,7 @@ public partial class Empresas : System.Web.UI.Page
                 dr = dt.NewRow();
                 i = i + 4;
             }
-            catch ( Exception ex)
+            catch ( Exception )
             {
                 
             }
@@ -147,7 +147,7 @@ public partial class Empresas : System.Web.UI.Page
                 dt.Rows.Add(dr);
                 dr = dt.NewRow();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }
@@ -176,7 +176,7 @@ public partial class Empresas : System.Web.UI.Page
                 dt.Rows.Add(dr);
                 dr = dt.NewRow();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }
@@ -234,7 +234,7 @@ public partial class Empresas : System.Web.UI.Page
                 dr = dt.NewRow();
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }
@@ -286,7 +286,7 @@ public partial class Empresas : System.Web.UI.Page
                 dr = dt.NewRow();
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 
             }

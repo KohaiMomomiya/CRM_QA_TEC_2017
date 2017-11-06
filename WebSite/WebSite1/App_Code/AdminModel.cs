@@ -6,7 +6,6 @@ using System.Data;
 using System.Data.SqlClient;
 using toConnect;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace toAdminModel
 {

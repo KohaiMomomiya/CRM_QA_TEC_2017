@@ -37,7 +37,7 @@ public partial class _Default : System.Web.UI.Page
 
         //Voy a cargar las corporaciones, son string entonces voy a usar un array de strings
         ArrayList corporations = new ArrayList();
-        int isUser = 0;
+        //int isUser = 0;
         corporations = AdminModel.corporations();
 
         DropDownList1.Items.Clear();
