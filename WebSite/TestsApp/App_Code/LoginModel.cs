@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using toConnect;
+
+
 
 
 /// <summary>
@@ -29,57 +32,14 @@ namespace LoginModelApp
             password = pPassword;
         }
 
-        public String getCorpNameUser()
-        {
-            String corpName = "";
-            SqlConnection con = null;
-            con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
-
-            try
-            {
-                con.Open();
-                SqlCommand cmd = new SqlCommand();
-                SqlDataReader reader;
-                cmd.CommandText = "dbo.getUserCorporationName";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Connection = con;
-                cmd.Parameters.AddWithValue("@user", userName);
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    corpName = reader.GetString(0);
-                }
-                con.Close();
-            }
-            catch (Exception ex)
-            {
-                //Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-                //"No hay conexión con la BD."
-                corpName = "-2";
-
-            }
-
-            return corpName;
-        }
-
         public int verificarInicioSesion()
         {
             int returnValue = 0;
             SqlConnection con = null;
             int isUser = 0;
 
-            try
-            {
-                con = new SqlConnection("Data Source=MPC\\SQLEXPRESS;Initial Catalog=TEC_QA_CRM;Integrated Security=True");
-                //lblBase = "Conexión con TEC_QA_CRM";
-            }
-            catch (Exception ex)
-            {
-                //Response.Write("<script language=javascript>alert('No hay conexión con la BD.')</script>");
-                //"No hay conexión con la BD."
-                returnValue = -2;
-
-            }
+            Connection conexion = new Connection();
+            con = conexion.getConnection();
 
             con.Open();
             SqlCommand cmd = new SqlCommand("SELECT dbo.validarLogin(@userName,@password)", con);
@@ -118,3 +78,4 @@ namespace LoginModelApp
         }
     }
 }
+

@@ -14,7 +14,7 @@ public partial class _Default : System.Web.UI.Page
 {
    
 
-    //SqlConnection con = new SqlConnection("Data Source=DESKTOP-7UGVRJF;Initial Catalog=controlVacaciones;Integrated Security=True");
+    
 
     protected void Page_Load(object sender, EventArgs e)
     {

@@ -48,6 +48,7 @@ namespace toEmpresaModel
                     {
                         nombrecorporation = reader.GetValue(1).ToString();
                         corporacionesinfo.Add(reader.GetValue(2).ToString());
+
                     }
                     catch (System.Data.SqlTypes.SqlNullValueException ex)
                     {
@@ -191,6 +192,14 @@ namespace toEmpresaModel
             Connection conexion = new Connection();
             con = conexion.getConnection();
 
+
+            
+
+
+            
+
+
+
             try
             {
                 con.Open();
@@ -312,7 +321,7 @@ namespace toEmpresaModel
 
 
 
-        public static ArrayList getSeguimientoVentas(string userName)
+        public static ArrayList getSeguimientoVentas()
         {
 
             ArrayList ventasSeguidas = new ArrayList();
@@ -330,7 +339,6 @@ namespace toEmpresaModel
                 SqlDataReader reader;
                 cmd.CommandText = "dbo.getSalesInfo";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@corporationName", userName);
                 cmd.Connection = con;
 
                 reader = cmd.ExecuteReader();
@@ -370,7 +378,7 @@ namespace toEmpresaModel
         }
 
 
-        public static ArrayList getPropuestasInfo(string userName)
+        public static ArrayList getPropuestasInfo()
         {
             ArrayList propuestasInfo = new ArrayList();
 
@@ -388,7 +396,6 @@ namespace toEmpresaModel
                 SqlDataReader reader;
                 cmd.CommandText = "dbo.getReviewsInfo";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@corporationName", userName);
                 cmd.Connection = con;
 
                 reader = cmd.ExecuteReader();

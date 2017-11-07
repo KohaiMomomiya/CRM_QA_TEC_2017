@@ -58,8 +58,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Code\AdminModel.cs" />
+    <Compile Include="App_Code\Connection.cs" />
+    <Compile Include="App_Code\EmpresaModel.cs" />
     <Compile Include="App_Code\LoginModel.cs" />
-    <Compile Include="Test.cs" />
+    <Compile Include="TestDataInfo.cs" />
+    <Compile Include="TestLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

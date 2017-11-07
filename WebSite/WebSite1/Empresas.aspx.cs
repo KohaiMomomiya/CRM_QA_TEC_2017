@@ -198,7 +198,7 @@ public partial class Empresas : System.Web.UI.Page
         string nombreCorp = Label12.Text;
 
         ArrayList infoVentasSeguimiento = new ArrayList();
-        infoVentasSeguimiento = EmpresaModel.getSeguimientoVentas();
+        infoVentasSeguimiento = EmpresaModel.getSeguimientoVentas(nombreCorp);
 
 
 
@@ -250,7 +250,7 @@ public partial class Empresas : System.Web.UI.Page
         string nombreCorp = Label12.Text;
 
         ArrayList infoPropuestasSeguimiento = new ArrayList();
-        infoPropuestasSeguimiento = EmpresaModel.getPropuestasInfo();
+        infoPropuestasSeguimiento = EmpresaModel.getPropuestasInfo(nombreCorp);
 
 
         DataTable dt = new DataTable();
