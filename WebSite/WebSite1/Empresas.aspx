@@ -153,6 +153,8 @@
         <br />
         <br />
 
+            <asp:Label ID="Label25" runat="server" Font-Names="Coolvetica Rg" Font-Size="X-Large" Text="Resultados de Propuestas"></asp:Label>
+
         <br />
         <br />
         <asp:Panel ID="Panel6" runat="server" Height="322px" ScrollBars="Both" style="margin-left: 77px" Width="937px">
