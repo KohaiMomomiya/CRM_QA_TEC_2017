@@ -126,7 +126,7 @@ namespace toEmpresaModel
 
         public static ArrayList getCorpContacts(String nameCorporation)
         {
-            ArrayList filasCorp = new ArrayList();
+            ArrayList contactsCorp = new ArrayList();
 
             string numeroTelefono = "";
 
@@ -155,12 +155,12 @@ namespace toEmpresaModel
 
                     try
                     {
-                        filasCorp.Add(reader.GetValue(1).ToString());
-                        filasCorp.Add(reader.GetValue(2).ToString());
+                        contactsCorp.Add(reader.GetValue(1).ToString());
+                        contactsCorp.Add(reader.GetValue(2).ToString());
                         numeroTelefono = getContactPhoneNumbers(reader.GetInt32(0));
-                        filasCorp.Add(numeroTelefono);
-                        filasCorp.Add(reader.GetValue(3).ToString());
-                        filasCorp.Add(reader.GetValue(4).ToString());
+                        contactsCorp.Add(numeroTelefono);
+                        contactsCorp.Add(reader.GetValue(3).ToString());
+                        contactsCorp.Add(reader.GetValue(4).ToString());
                     }
                     catch (System.Data.SqlTypes.SqlNullValueException ex)
                     {
@@ -178,7 +178,7 @@ namespace toEmpresaModel
 
             
 
-            return filasCorp;
+            return contactsCorp;
         }
 
 
@@ -191,14 +191,6 @@ namespace toEmpresaModel
 
             Connection conexion = new Connection();
             con = conexion.getConnection();
-
-
-            
-
-
-            
-
-
 
             try
             {
@@ -321,7 +313,7 @@ namespace toEmpresaModel
 
 
 
-        public static ArrayList getSeguimientoVentas()
+        public static ArrayList getSeguimientoVentas(String nameCorporation)
         {
 
             ArrayList ventasSeguidas = new ArrayList();
@@ -339,6 +331,7 @@ namespace toEmpresaModel
                 SqlDataReader reader;
                 cmd.CommandText = "dbo.getSalesInfo";
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@corporationName", nameCorporation);
                 cmd.Connection = con;
 
                 reader = cmd.ExecuteReader();
@@ -378,7 +371,7 @@ namespace toEmpresaModel
         }
 
 
-        public static ArrayList getPropuestasInfo()
+        public static ArrayList getPropuestasInfo(String nameCorporation)
         {
             ArrayList propuestasInfo = new ArrayList();
 
@@ -396,6 +389,7 @@ namespace toEmpresaModel
                 SqlDataReader reader;
                 cmd.CommandText = "dbo.getReviewsInfo";
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@corporationName", nameCorporation);
                 cmd.Connection = con;
 
                 reader = cmd.ExecuteReader();
