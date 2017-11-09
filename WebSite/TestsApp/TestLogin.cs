@@ -20,14 +20,14 @@ namespace LoginModelApp
 {
 
     [TestFixture]
-    public class Test
+    public class TestLogin
     {
-        public Test() {
+        public TestLogin() {
         }
 
 
         //UC-001: Acceder al sistema.
-        //      TC-01: Acceder al sistema como administrador.
+        //      TC-001: Acceder al sistema como administrador.
         [TestCase ("admin@gmail.com","1234")]
        
         public void LoginUser_ValidData_StartUserSession(String userName, String password)
@@ -42,7 +42,7 @@ namespace LoginModelApp
 
 
         //UC-001: Acceder al sistema.
-        //      TC-01: Acceder al sistema como inválido.
+        //      TC-002: Acceder al sistema como inválido.
         
         [TestCase("adminzzz@gmail.com", "1234")]
         public void LoginUser_InvalidDataUserName_StartUserSession(String userName, String password)
@@ -55,7 +55,7 @@ namespace LoginModelApp
         }
 
         //UC-001: Acceder al sistema.
-        //      TC-03: Acceder al sistema con contraseña inválida.
+        //      TC-003: Acceder al sistema con contraseña inválida.
         [TestCase("admin@gmail.com", "12434")]
         public void LoginUser_InvalidDataPassword_StartUserSession(String userName, String password)
         {
@@ -67,7 +67,7 @@ namespace LoginModelApp
         }
 
         //UC-001: Acceder al sistema.
-        //      TC-04: Acceder al sistema No se ingresa la contaseña.
+        //      TC-004: Acceder al sistema No se ingresa la contaseña.
         [TestCase("admin@gmail.com", "")]
         public void LoginUser_InvalidDataNoPassword_StartUserSession(String userName, String password)
         {
@@ -79,7 +79,7 @@ namespace LoginModelApp
         }
 
         //UC-001: Acceder al sistema.
-        //      TC-05: Acceder al sistema sin usuario.
+        //      TC-005: Acceder al sistema sin usuario.
         [TestCase("", "1234")]
         public void LoginUser_InvalidDataNoUserName_StartUserSession(String userName, String password)
         {
@@ -93,7 +93,7 @@ namespace LoginModelApp
         }
 
         //UC-001: Acceder a listado de Empresas.
-        //      TC-076: Acceder al sistema como usuario.
+        //      TC-006: Acceder al sistema como usuario.
 
         [TestCase("bernan0795@gmail.com", "1234")]
         public void SalesInfo_AvialableCorporationInformation_ShowCorporationInformation(String userName, String password)

@@ -14,7 +14,7 @@ Integrantes del Equipo de Desarrollo Original:
 - Esteban Fonseca Montoya
 
 
-Historial de Cambios y Versionamiento de Software
+Historial de Cambios y Versionamiento del Software
 -------------------------------------------------
 
 | <center> Versión </center> | <center> Fecha </center> | <center> Descripción </center> |
@@ -24,3 +24,4 @@ Historial de Cambios y Versionamiento de Software
 | 0.3.0 | 24/10/2017 | - Implementación de primera version de las pruebas del software. </br> - Implementación de funciones de consulta de datos en la aplicación.              |
 | 0.3.5 | 30/10/2017 | - Actualización de las implementaciones de pruebas del sistema. |
 | 0.4.0 | 06/11/2017 | - Se ha corregido la dirección de la base de datos para permitir su acceso desde otros equipos.</br> - Se han corregido bugs relacionados a excepciones no atrapadas.|
+| 0.4.2 | 08/11/2017 | - Se han corregido algunos errores menores en la estructura de las páginas web del software.</br> - Se han eliminados otros bugs menores.
